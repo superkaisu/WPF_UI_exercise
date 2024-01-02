@@ -1,0 +1,34 @@
+﻿<Window x:Class="kayttoliittyma_harjoitustyo.AddNewCustomer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:kayttoliittyma_harjoitustyo"
+        mc:Ignorable="d"
+        Title="New Customer" Height="324" Width="500">
+    <Window.DataContext>
+        <local:Invoice/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="BackgroundColor" Color="#F8F8F8"/>
+        <SolidColorBrush x:Key="HeaderBackgroundColor" Color="#FFD2C6B3" Opacity="0.6"/>
+    </Window.Resources>
+
+    <Canvas Background="{StaticResource BackgroundColor}">
+        <TextBox Canvas.Left="105" TextWrapping="Wrap" Text="{Binding CustomerName}" Canvas.Top="108" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox Canvas.Left="105" TextWrapping="Wrap" Text="{Binding StreetAddress}" Canvas.Top="141" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox Canvas.Left="104" TextWrapping="Wrap" Text="{Binding PostalCode}" Canvas.Top="172" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+        <Label Content="Name" Canvas.Left="16" Canvas.Top="103" HorizontalAlignment="Center" VerticalAlignment="Top" Width="41" Height="30"/>
+        <Label Content="Street Address" Canvas.Left="15" Canvas.Top="136" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Content="Postal Code" Canvas.Left="16" Canvas.Top="168" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Content="City" Canvas.Left="20" Canvas.Top="199" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox Canvas.Left="105" TextWrapping="Wrap" Text="{Binding City}" Canvas.Top="203" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+        <Button Content="Save" Canvas.Left="328" Canvas.Top="156" HorizontalAlignment="Center" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
+        <Label Content="Fill in all the fields prior Saving" Canvas.Left="289" Canvas.Top="117" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+
+    </Canvas>
+</Window>

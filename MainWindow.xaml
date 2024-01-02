@@ -1,0 +1,136 @@
+﻿<Window x:Class="kayttoliittyma_harjoitustyo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:kayttoliittyma_harjoitustyo"
+        mc:Ignorable="d"
+        Title="Kaken Rakennus Oy" Height="650" Width="800" MinHeight="450" MinWidth="800" MaxHeight="600" MaxWidth="1000">
+    <!--Solid Colors to unify UI expression-->
+    <Window.Resources>
+        <SolidColorBrush x:Key="BackgroundColor" Color="#F8F8F8"/>
+        <SolidColorBrush x:Key="HeaderBackgroundColor" Color="#FFD2C6B3" Opacity="0.6"/>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <local:Invoice/>
+    </Window.DataContext>
+
+    <Canvas Background="{StaticResource BackgroundColor}">
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Width="800">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!--Menu-->
+            <Menu Grid.Row="0">
+                <MenuItem Header="File">
+                    <MenuItem Header="List Customers..." Click="ListAllCustomers" />
+                    <Separator/>
+                    <MenuItem Header="List Invoices..." Click="ListAllIncvoices" />
+                    <Separator/>
+
+                </MenuItem>
+                <MenuItem Header="Product">
+                    <MenuItem Header="Add Product..." Click="AddNewProduct_Click" />
+                    <MenuItem Header="Product list..." Click="GetAllProducts"/>
+                </MenuItem>
+                <MenuItem Header="About" Height="26">
+                    <MenuItem Header="Version info..."  Click="VersionInfoClick"/>
+                    <MenuItem Header="Adding Invoice..." Click="AddInvoiceInfo"/>
+                    <MenuItem Header="Managing Products..." Click="ManagingProductsInfo"/>
+                </MenuItem>
+            </Menu>
+
+            <!--Kaken Rakennus Oy Info-->
+            <TextBlock HorizontalAlignment="Left" Margin="32,168,0,0" Grid.Row="1" TextWrapping="Wrap"
+                       VerticalAlignment="Top" Height="71" Width="136" RenderTransformOrigin="0.508,0.484"><Run Text="Laskuttaja:"/><LineBreak/><Run Text="Kaken Rakennus Oy Majakkakuja 5,        70780 Kuopio"/></TextBlock>
+
+            <!--Buttons to navidate Invoices-->
+            <Button Content="&lt;&lt;" Margin="310,45,458,401" Grid.Row="1" Width="32" Click="FirstInvoiceClick"/>
+            <Button Content="&lt;" Margin="342,45,426,401" Grid.Row="1" Width="32" Click="PrevClick"/>
+            <Button Content="&gt;" Margin="400,45,368,401" Width="32"
+                        RenderTransformOrigin="0.481,0.539" Grid.Row="1" Click="NextClick"/>
+            <Button Content="&gt;&gt;" Margin="432,45,336,401" Width="32" Grid.Row="1" Click="LastInvoiceClick"/>
+
+
+            <Label Content="Invoice Number" HorizontalAlignment="Left" Margin="215,92,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+            <Label Content="Issue Date" Margin="523,76,150,308" Grid.Row="1"/>
+            <Label Content="Due Date" Margin="523,109,189,275" Grid.Row="1"/>
+
+            <!--DataGrid to show InvoiceLines/rows-->
+            <DataGrid x:Name="grdInvoiceLines" Grid.Row="1" ItemsSource="{Binding InvoiceLines}" Margin="237,245,67,0" AutoGenerateColumns="False" Background="{StaticResource BackgroundColor}" SelectionChanged="grdInvoiceLines_SelectionChanged">
+
+                <DataGrid.Resources>
+                    <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="Background" Value="#FFD2C6B3"/>
+                        <Setter Property="Opacity" Value="0.75"/>
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                    </Style>
+                </DataGrid.Resources>
+
+                <DataGrid.Columns>
+                    <DataGridComboBoxColumn x:Name="comProductNameColumn"
+                                        Width="180"
+                                        Header="Product"
+                                        DisplayMemberPath="ProductName"
+                                        SelectedValuePath="ProductID"
+                                        SelectedValueBinding="{Binding ProductID}"/>
+
+                    <DataGridTextColumn Header="Qty" Binding="{Binding LineProductQty}" Width="60"/>
+                    <DataGridTextColumn Binding="{Binding InvoiceLineTotal}"  Width="*" Header="Line Total"  IsReadOnly="True"/>
+
+                </DataGrid.Columns>
+
+            </DataGrid>
+
+            <!--Invoice customer info-->
+
+            <TextBox HorizontalAlignment="Left" Margin="334,96,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding InvoiceNbr}" VerticalAlignment="Top" Width="120"/>
+            <DatePicker HorizontalAlignment="Left" Margin="605,76,0,0" Grid.Row="1" VerticalAlignment="Top" SelectedDate="{Binding InvoiceDate}"/>
+            <DatePicker HorizontalAlignment="Left" Margin="605,112,0,0" Grid.Row="1" VerticalAlignment="Top" SelectedDate="{Binding InvoiceDueDate}"/>
+
+
+            <TextBox HorizontalAlignment="Left" Margin="456,193,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding PostalCode}" VerticalAlignment="Top" Width="120" ToolTip="Changes made and saved here will change customer info."/>
+            <TextBox HorizontalAlignment="Left" Margin="594,192,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding City}" VerticalAlignment="Top" Width="139" ToolTip="Changes made and saved here will change customer info."/>
+            <Label Content="Customer ID" Margin="216,189,485,242" Grid.Row="1"/>
+            <TextBox TextWrapping="Wrap" Text="{Binding CustomerID}" Width="90" HorizontalAlignment="Left" Canvas.Left="300" Canvas.Top="218" VerticalAlignment="Top" Margin="299,193,0,0" Grid.Row="1"/>
+
+            <!--Invoice Total Sum-->
+            <Label Content="Total" HorizontalAlignment="Left" Margin="541,216,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+            <Label x:Name="lblInvoiceTotal" Content="{Binding InvoiceTotal}" HorizontalAlignment="Left" Margin="594,216,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+
+            
+            <!--'CRUD' buttons-->
+            <Button Content="Save Invoice" HorizontalAlignment="Left" Margin="662,35,0,0" Grid.Row="1" VerticalAlignment="Top" Click="btnClickSaveInvoice"/>
+            <Label Content="Label" HorizontalAlignment="Left" Margin="495,157,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+            <Button Content="New Customer" HorizontalAlignment="Left" Margin="42,298,0,0" Grid.Row="1" VerticalAlignment="Top" Width="138" Click="btnAddCustomer"/>
+            
+            <Image Margin="0,0,599,308" Grid.Row="1" Source="/kakenRakennus1.png" Stretch="Fill"/>
+            
+            <Button Content="New Invoice" HorizontalAlignment="Left" Margin="42,327,0,0" Grid.Row="1" VerticalAlignment="Top" Width="138" Click="btnAddNewInvoice"/>
+            <Button Content="Delete Invoice" HorizontalAlignment="Left" Margin="42,435,0,0" Grid.Row="1" VerticalAlignment="Top" Width="138" Click="btnDeleteInvoice_Click" />
+            <Button Content="Delete Customer" HorizontalAlignment="Left" Margin="42,405,0,0" Grid.Row="1" VerticalAlignment="Top" Width="138" Click="btnDeleteCustomer_Click"/>
+            
+            <Label Content="Modify and Inspect Invoices:" HorizontalAlignment="Left" Margin="299,10,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+
+            
+            
+        </Grid>
+
+
+        <!--These wanted to be here, more customer info-->
+        <Label Content="Customer" Grid.Row="1" Height="27" Canvas.Left="216" Canvas.Top="184" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBox TextWrapping="Wrap" Text="{Binding StreetAddress}" Width="277" Canvas.Left="455" Canvas.Top="187" ToolTip="Changes made and saved here will change customer info."/>
+        <TextBox HorizontalAlignment="Left" Grid.Row="1" TextWrapping="Wrap" Text="{Binding CustomerName}" VerticalAlignment="Top" Width="139" Canvas.Left="299" Canvas.Top="187" ToolTip="Changes made and saved here will change customer info."/>
+        <Label Content="Address" Canvas.Left="452" Canvas.Top="160" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+
+    </Canvas>
+
+</Window>
