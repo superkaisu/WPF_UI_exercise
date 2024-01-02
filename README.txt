@@ -1,3 +1,6 @@
+First project I coded by myself with graphic UI and DB.
+
+
 Käyttöliittymäohjelmointi, harjoitustyö
 
 Kaisu Suurniemi, DTNS22
